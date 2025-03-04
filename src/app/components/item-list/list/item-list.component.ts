@@ -16,7 +16,7 @@ export class ItemListComponent implements OnInit {
   errorMessage: string | null = null;
 
   private itemListService = inject(ItemListService);
-  protected router = inject(Router);
+  public router = inject(Router);
 
   ngOnInit(): void {
     this.loadItems();
