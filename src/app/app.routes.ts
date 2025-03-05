@@ -3,8 +3,8 @@ import { ItemListComponent } from './components/item-list/list/item-list.compone
 import { ItemListUpdateComponent } from './components/item-list/update/item-list-update.component';
 
 export const routes: Routes = [
-  { path: '', component: ItemListComponent },
-  { path: 'new', component: ItemListUpdateComponent },  
-  { path: ':id/edit', component: ItemListUpdateComponent },
-  { path: '**', redirectTo: '', pathMatch: 'full' } 
+  {
+    path: '',
+    loadChildren: () => import(`./components/item-list/item-list.routes`),
+  },
 ];

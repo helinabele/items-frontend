@@ -17,6 +17,7 @@ import { CommonModule } from '@angular/common';
   templateUrl: './item-list-update.component.html',
 })
 export class ItemListUpdateComponent implements OnInit {
+  [x: string]: any;
   isSaving = false;
   itemList: IItemList | null = null;
  
@@ -28,36 +29,40 @@ export class ItemListUpdateComponent implements OnInit {
   editForm!: ItemListFormGroup;
 
   ngOnInit(): void {
-    this.editForm = this.itemListFormService.createItemListFormGroup(); 
-
+    // Initialize the form group first, before loading data from the route.
+    this.editForm = this.itemListFormService.createItemListFormGroup();
+  
+    // Check for itemList data and update form if available.
     this.activatedRoute.data.subscribe(({ itemList }) => {
-      this.itemList = itemList;
       if (itemList) {
-        this.updateForm(itemList);
+        this.itemList = itemList;
+        this.updateForm(itemList); // <-- Ensure this is called
       }
     });
   }
-
-
+  
   save(): void {
     this.isSaving = true;
     const itemList = this.itemListFormService.getItemList(this.editForm);
-
+  
+    console.log('Form Values:', itemList);  // Debug log to check form values
+  
     const saveOperation: Observable<HttpResponse<IItemList>> = itemList.id
       ? this.itemListService.update(itemList)
       : this.itemListService.create(itemList);
-
+  
     saveOperation.pipe(finalize(() => (this.isSaving = false))).subscribe({
       next: () => this.onSaveSuccess(),
       error: (error) => console.error('Error saving item:', error),
     });
   }
-
+  
   private onSaveSuccess(): void {
     this.router.navigate(['/']);
   }
 
   private updateForm(itemList: IItemList): void {
     this.itemListFormService.resetForm(this.editForm, itemList);
-  }
+  } 
+  
 }

@@ -1,28 +1,15 @@
-import { inject } from '@angular/core';
-import { HttpResponse } from '@angular/common/http';
-import { ActivatedRouteSnapshot, Router } from '@angular/router';
-import { EMPTY, Observable, of } from 'rxjs';
-import { mergeMap } from 'rxjs/operators';
+import { Injectable } from "@angular/core";
+import { ActivatedRouteSnapshot, Resolve } from "@angular/router";
+import { IItemList } from "../item-list.model";
+import { ItemListService } from "../service/item-list.service";
+import { Observable } from "rxjs";
 
-import { IItemList } from '../item-list.model';
-import { ItemListService } from '../service/item-list.service';
+@Injectable({ providedIn: 'root' })
+export class ItemListResolver implements Resolve<IItemList> {
+  constructor(private service: ItemListService) {}
 
-const itemListResolve = (route: ActivatedRouteSnapshot): Observable<null | IItemList> => {
-  const id = route.params.id;
-  if (id) {
-    return inject(ItemListService)
-      .find(id)
-      .pipe(
-        mergeMap((itemList: HttpResponse<IItemList>) => {
-          if (itemList.body) {
-            return of(itemList.body);
-          }
-          inject(Router).navigate(['404']);
-          return EMPTY;
-        }),
-      );
+  resolve(route: ActivatedRouteSnapshot): Observable<IItemList> {
+    const id = route.params['id'];
+    return this.service.getById(id);
   }
-  return of(null);
-};
-
-export default itemListResolve;
+}

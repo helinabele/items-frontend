@@ -7,7 +7,7 @@ type ItemListFormGroupInput = IItemList | Partial<NewItemList>;
 type ItemListFormGroupContent = {
   id: FormControl<IItemList['id'] | NewItemList['id']>;
   title: FormControl<IItemList['title']>;
-  description: FormControl<IItemList['body']>;
+  body: FormControl<IItemList['body']>;
 };
 
 export type ItemListFormGroup = FormGroup<ItemListFormGroupContent>;
@@ -18,7 +18,7 @@ export class ItemListFormService {
     return new FormGroup<ItemListFormGroupContent>({
       id: new FormControl<string | null>({ value: itemList.id ?? null, disabled: true }),
       title: new FormControl(itemList.title, [Validators.required]),
-      description: new FormControl(itemList.body),
+      body: new FormControl(itemList.body),
     });
   }
 

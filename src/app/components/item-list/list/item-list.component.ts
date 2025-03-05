@@ -37,6 +37,10 @@ export class ItemListComponent implements OnInit {
     });
   }
 
+  viewItem(id: string | null): void {
+    this.router.navigate(['/', id, 'view']);
+  }
+
   deleteItem(id: string | null): void {
     if (!confirm('Are you sure you want to delete this item?')) return;
 
