@@ -14,9 +14,14 @@ export type ItemListFormGroup = FormGroup<ItemListFormGroupContent>;
 
 @Injectable({ providedIn: 'root' })
 export class ItemListFormService {
-  createItemListFormGroup(itemList: ItemListFormGroupInput = { id: null }): ItemListFormGroup {
+  createItemListFormGroup(
+    itemList: ItemListFormGroupInput = { id: null }
+  ): ItemListFormGroup {
     return new FormGroup<ItemListFormGroupContent>({
-      id: new FormControl<string | null>({ value: itemList.id ?? null, disabled: true }),
+      id: new FormControl<string | null>({
+        value: itemList.id ?? null,
+        disabled: true,
+      }),
       title: new FormControl(itemList.title, [Validators.required]),
       body: new FormControl(itemList.body),
     });
@@ -29,10 +34,9 @@ export class ItemListFormService {
   resetForm(form: ItemListFormGroup, itemList: ItemListFormGroupInput): void {
     form.reset({
       ...itemList,
-      id: itemList.id ?? null, 
+      id: itemList.id ?? null,
     });
-  
-    form.controls.id.disable(); 
+
+    form.controls.id.disable();
   }
-  
 }

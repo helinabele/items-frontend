@@ -1,8 +1,8 @@
-import { Injectable } from "@angular/core";
-import { ActivatedRouteSnapshot, Resolve } from "@angular/router";
-import { IItemList } from "../item-list.model";
-import { ItemListService } from "../service/item-list.service";
-import { Observable } from "rxjs";
+import { Injectable } from '@angular/core';
+import { ActivatedRouteSnapshot, Resolve } from '@angular/router';
+import { IItemList } from '../item-list.model';
+import { ItemListService } from '../service/item-list.service';
+import { Observable } from 'rxjs';
 
 @Injectable({ providedIn: 'root' })
 export class ItemListResolver implements Resolve<IItemList> {

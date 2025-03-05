@@ -9,7 +9,7 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
   selector: 'app-item-list-view',
   standalone: true,
   imports: [FormsModule, ReactiveFormsModule, CommonModule],
-  templateUrl: './item-list-view.component.html'
+  templateUrl: './item-list-view.component.html',
 })
 export class ItemListViewComponent {
   item: IItemList | null = null;
@@ -21,7 +21,7 @@ export class ItemListViewComponent {
   protected router = inject(Router);
 
   ngOnInit(): void {
-    this.activatedRoute.params.subscribe(params => {
+    this.activatedRoute.params.subscribe((params) => {
       const id = params['id'];
       if (id) {
         this.loadItem(id);
@@ -40,7 +40,7 @@ export class ItemListViewComponent {
         this.errorMessage = 'Failed to load item details';
         console.error(error);
         this.isLoading = false;
-      }
+      },
     });
   }
 
