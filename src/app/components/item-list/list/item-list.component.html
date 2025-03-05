@@ -1,48 +1,87 @@
 <div class="max-w-4xl mx-auto mt-6 p-4 bg-white shadow-md rounded-lg">
   <h2 class="text-2xl font-semibold mb-4 text-gray-700">Item List</h2>
 
-  <button class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-md transition mb-4"
-    (click)="router.navigate(['new'])">
-    + Add New Item
-  </button>
+  <div class="flex justify-between mb-4">
+    <button type="button"
+      class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-md transition"
+      (click)="addItem()"
+    >
+    <i class="fas fa-plus mr-2"></i> Add New Item
+    </button>
+    
+    <button
+      class="bg-gray-600 hover:bg-gray-700 text-white px-4 py-2 rounded-md transition"
+      (click)="loadItems()"
+    >
+    <i class="fas fa-sync-alt"></i>Refresh
+    </button>
+  </div>
+
+  <!-- Searchhhh -->
+  <div class="relative mb-4 w-64">
+    <input
+      type="text"
+      [(ngModel)]="searchText"
+      (input)="filterItems()"
+      placeholder="Search..."
+      class="w-full p-2 border rounded"
+    />
+    <button
+      *ngIf="searchText"
+      class="absolute right-2 top-1/2 -translate-y-1/2 bg-gray-300 p-1 rounded-full"
+      (click)="clearSearch()"
+    ><i class="fas fa-times"></i>
+    </button>
+  </div>
 
   <div *ngIf="isLoading" class="text-blue-500 text-center">Loading...</div>
-  <div *ngIf="errorMessage" class="text-red-500 text-center">{{ errorMessage }}</div>
+  <div *ngIf="errorMessage" class="text-red-500 text-center">
+    {{ errorMessage }}
+  </div>
 
   <div class="overflow-x-auto">
-    <table class="min-w-full bg-white border border-gray-200 rounded-lg shadow-md">
+    <table class="w-full min-w-[600px] bg-white border border-gray-200 rounded-lg shadow-md">
       <thead>
         <tr class="bg-gray-100">
-          <th class="px-6 py-3 text-left text-sm font-semibold text-gray-700">Id</th>
-          <th class="px-6 py-3 text-left text-sm font-semibold text-gray-700">Title</th>
+          <th class="px-6 py-3 text-left text-sm font-semibold text-gray-700 cursor-pointer" (click)="toggleSort('id')">
+            <span *ngIf="sortColumn === 'id'">{{ sortDirection === 'asc' ? '🔼' : '🔽' }}</span>
+            Id 
+          </th>
+          <th class="px-6 py-3 text-left text-sm font-semibold text-gray-700 cursor-pointer" (click)="toggleSort('title')">
+           <span *ngIf="sortColumn === 'title'">{{ sortDirection === 'asc' ? '🔼' : '🔽' }}</span>
+            Title 
+          </th>
           <th class="px-6 py-3 text-left text-sm font-semibold text-gray-700">Description</th>
           <th class="px-6 py-3 text-left text-sm font-semibold text-gray-700">Actions</th>
         </tr>
       </thead>
       <tbody>
-        <tr *ngFor="let item of items" class="border-t border-gray-200">
+        <tr *ngFor="let item of getPaginatedItems()" class="border-t border-gray-200">
           <td class="px-6 py-4 text-sm text-gray-800">{{ item.id }}</td>
           <td class="px-6 py-4 text-sm text-gray-600">{{ item.title }}</td>
           <td class="px-6 py-4 text-sm text-gray-600">{{ item.body }}</td>
           <td class="px-6 py-4 text-sm">
-            <div class="flex gap-2">
-              <button class="bg-green-500 hover:bg-green-600 text-white px-3 py-1 rounded-md transition"
-                (click)="viewItem(item.id)">
-                View
-              </button>
-              <button class="bg-yellow-500 hover:bg-yellow-600 text-white px-3 py-1 rounded-md transition"
-                (click)="router.navigate(['/', item.id, 'edit'])">
-                Edit
-              </button>
-              <button class="bg-red-500 hover:bg-red-600 text-white px-3 py-1 rounded-md transition"
-                (click)="deleteItem(item.id)">
-                Delete
-              </button>
+            <div class="flex flex-wrap gap-2">
+              <button class="bg-green-500 hover:bg-green-600 text-white px-3 py-1 rounded-md transition" (click)="viewItem(item.id)"> <i class="fas fa-eye"></i> View</button>
+              <button class="bg-yellow-500 hover:bg-yellow-600 text-white px-3 py-1 rounded-md transition" (click)="router.navigate(['/', item.id, 'edit'])"><i class="fas fa-edit"></i> Edit</button>
+              <button class="bg-red-500 hover:bg-red-600 text-white px-3 py-1 rounded-md transition" (click)="openDeleteDialog(item.id)"><i class="fas fa-trash-alt"></i> Delete</button>
             </div>
           </td>
-          
         </tr>
       </tbody>
     </table>
+  </div>
+  
+  <app-delete-dialog
+  *ngIf="showDeleteDialog"
+  [itemId]="itemToDelete"
+  (confirm)="confirmDelete($event)"
+  (cancel)="cancelDelete()">
+</app-delete-dialog>
+
+  <div class="flex flex-wrap justify-between items-center mt-4">
+    <button class="bg-gray-300 hover:bg-gray-400 text-black px-4 py-2 rounded-md transition" (click)="prevPage()" [disabled]="currentPage === 1"><i class="fas fa-chevron-left"></i> Previous</button>
+    <span>Page {{ currentPage }} of {{ totalPages }}</span>
+    <button class="bg-gray-300 hover:bg-gray-400 text-black px-4 py-2 rounded-md transition" (click)="nextPage()" [disabled]="currentPage * itemsPerPage >= filteredItems.length">Next<i class="fas fa-chevron-right"></i></button>
   </div>
 </div>

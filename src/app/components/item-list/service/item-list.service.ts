@@ -38,9 +38,9 @@ export class ItemListService {
     return this.http.post<IItemList>(this.resourceUrl, itemList, {
       observe: 'response',
     });
-  }  
+  }
 
-  delete(id: number): Observable<void> {
+  delete(id: string | null): Observable<void> {
     return this.http
       .delete<void>(`${this.resourceUrl}/${id}`)
       .pipe(catchError(this.handleError));
