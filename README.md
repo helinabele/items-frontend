@@ -31,7 +31,7 @@ Open your browser and navigate to http://localhost:4200 to view the application 
 
 **You can access the deployed application at the following URL:**
 
-https://items-frontend.com 
+https://itemsfrontend.netlify.app 
 
 By following these steps, you can run the project locally and also access the deployed version of the application.
 
