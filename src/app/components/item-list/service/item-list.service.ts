@@ -38,7 +38,7 @@ export class ItemListService {
     return this.http.post<IItemList>(this.resourceUrl, itemList, {
       observe: 'response',
     });
-  }
+  }  
 
   delete(id: number): Observable<void> {
     return this.http
